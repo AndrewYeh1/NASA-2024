@@ -1,5 +1,8 @@
+import coords.planetData
+
+
 def main():
-    pass
+    exoplanets = coords.planetData.PlanetData("resources/exoplanets.xlsx")
 
 
 if __name__ == '__main__':
