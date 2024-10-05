@@ -1,8 +1,8 @@
-import gui.gui
+import coords.planetData
 
 
 def main():
-    mainGui = gui.gui.Gui()
+    exoplanets = coords.planetData.PlanetData("resources/exoplanets.xlsx")
 
 
 if __name__ == '__main__':
