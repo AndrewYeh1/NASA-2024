@@ -32,3 +32,11 @@ class PlanetData:
         print(self.dec)
         print(self.dist)
 
+    #function turns star coordinates into 2d plane as if you were looking up at stars from planet (north/south pole)
+    #dist star is from new planet to star
+    def projectTo2D(distStarX, distStarY, distStarZ, planetX, planetY, planetZ, directionFacing):
+        
+
+        xPos = 1
+        yPos = 2
+        return [xPos, yPos]
