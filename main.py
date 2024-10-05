@@ -8,6 +8,5 @@ def main():
     # win = gui.gui.Gui()
     stars = coords.starData.StarData()
 
-
 if __name__ == '__main__':
     main()
