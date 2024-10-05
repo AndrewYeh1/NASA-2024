@@ -1,5 +1,8 @@
+import gui.gui
+
+
 def main():
-    pass
+    mainGui = gui.gui.Gui()
 
 
 if __name__ == '__main__':

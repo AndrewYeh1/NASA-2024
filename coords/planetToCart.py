@@ -1,7 +1,7 @@
 import math
 
+
 class CoordConversion:
-    
     def equaToCart(rightAscension, declination, distance):
         pi = math.pi
         rightAscensionRads = rightAscension*pi/180.0
