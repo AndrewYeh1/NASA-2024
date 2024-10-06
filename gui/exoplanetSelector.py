@@ -1,3 +1,5 @@
+import math
+
 from . import planet
 
 from coords import projectionTo2D
@@ -15,7 +17,7 @@ class ExoplanetSelector:
 
         self.planetList = []
         for i in range(len(self.planetX)):
-            self.planetList.append(planet.Planet(self.planetX[i], self.planetY[i], 3, self.canvas, self.planetName[i]))
+            self.planetList.append(planet.Planet(self.planetX[i], self.planetY[i], 5, self.canvas, self.planetName[i]))
 
     def show(self):
         for i in self.planetList:

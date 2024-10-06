@@ -9,7 +9,7 @@ class Gui:
     def __init__(self):
         pygame.init()
         pygame.font.init()
-        self.canvas = pygame.display.set_mode((0,0), pygame.FULLSCREEN)
+        self.canvas = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
         pygame.display.set_caption("Starmap")
 
         self.planetSelector = exoplanetSelector.ExoplanetSelector(self.canvas)
@@ -25,10 +25,6 @@ class Gui:
         while not ex:
             self.canvas.fill((0, 0, 0))
 
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    ex = True
-
             if self.screen == "planet":
                 self.planetSelector.show()
             elif self.screen == "star":
@@ -36,10 +32,13 @@ class Gui:
 
             # mouse over events
             x, y = pygame.mouse.get_pos()
-            hoverPlanet = self.planetSelector.mouseOver(x, y)
-            if hoverPlanet != "none":
-                self.planetInfo.setPlanet(hoverPlanet)
-                self.planetInfo.show()
+            if self.screen == "planet":
+                hoverPlanet = self.planetSelector.mouseOver(x, y)
+                if hoverPlanet != "none":
+                    self.planetInfo.setPlanet(hoverPlanet)
+                    self.planetInfo.show()
+            elif self.screen == "star":
+                self.starmapViewer.mouseOver(x, y)
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -47,11 +46,15 @@ class Gui:
 
                 # mouse events
                 if event.type == pygame.MOUSEBUTTONDOWN:
+                    print("mouse down")
                     x, y = pygame.mouse.get_pos()
-                    selectedPlanet = self.planetSelector.mouseClick(x, y)
-                    if selectedPlanet != "none":
-                        self.screen = "star"
-                        self.starmapViewer.setPlanet(selectedPlanet)
+                    if self.screen == "planet":
+                        selectedPlanet = self.planetSelector.mouseClick(x, y)
+                        if selectedPlanet != "none":
+                            self.screen = "star"
+                            self.starmapViewer.setPlanet(selectedPlanet)
+                    if self.screen == "star":
+                        self.starmapViewer.mouseClick(x, y)
 
             pygame.display.update()
 

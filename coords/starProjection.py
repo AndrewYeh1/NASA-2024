@@ -1,7 +1,6 @@
 import starData
 import planetData
 
-
 class StarData:
     def __init__(self):
         self.starData = starData.StarData()
