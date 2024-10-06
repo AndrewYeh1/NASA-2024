@@ -1,113 +1,120 @@
-import pygame
 import random
-import math
+import pygame
+from OpenGL.GL import *
+from OpenGL.GLU import *
+from pygame.locals import *
+from math import cos, sin
 
-pygame.init()
+NUM_STARS = 150
 
-screen_width = 800
-screen_height = 600
-screen = pygame.display.set_mode((screen_width, screen_height))
-pygame.display.set_caption("ExoVerse")
+class Star:
+    def __init__(self, x, y, radius, name):
+        self.x = x
+        self.y = y
+        self.radius = radius
+        self.name = name
+        self.selected = False
 
-BLACK = (0, 0, 0)
-WHITE = (255, 255, 255)
-RED = (255, 0, 0)
-
-font = pygame.font.SysFont(None, 24)
-
-
-#PUT THE INFORMATION OF THE STARS HERE REEEEEEEEEEEE
-def generate_stars(num_stars, center_x, center_y):
+# Generate random 2D stars with varying sizes
+def generate_stars(num_stars):
     stars = []
     for i in range(num_stars):
-        distance = random.uniform(100, 400)
-        angle = random.uniform(0, 2 * math.pi)
-        x = center_x + distance * math.cos(angle)
-        y = center_y + distance * math.sin(angle)
-        star_name = f"Star-{i + 1}"
-        stars.append({'position': (x, y), 'name': star_name, 'clicked': False, 'selected': False})
+        x = random.uniform(-800, 800)
+        y = random.uniform(-600, 600)
+        radius = random.uniform(10, 30)
+        name = f"Star-{i+1}"
+        stars.append(Star(x, y, radius, name))
     return stars
 
+# Render a circular star
+def draw_star_circle(star):
+    num_segments = 20
+    glBegin(GL_TRIANGLE_FAN)
+    glColor3f(1, 1, 1)
 
+    glVertex2f(star.x, star.y)
+    for i in range(num_segments + 1):
+        angle = 2 * 3.14159 * i / num_segments
+        glVertex2f(star.x + (star.radius * cos(angle)), star.y + (star.radius * sin(angle)))
+    glEnd()
 
-def draw_stars(screen, stars):
+# Display star name when selected
+def draw_star_name(star):
+    font = pygame.font.SysFont("Arial", 18, True)
+    text_surface = font.render(star.name, True, (255, 255, 255))
+    text_data = pygame.image.tostring(text_surface, "RGBA", True)
+
+    glEnable(GL_BLEND)
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
+
+    glRasterPos2f(star.x + star.radius + 10, star.y)
+    glDrawPixels(text_surface.get_width(), text_surface.get_height(), GL_RGBA, GL_UNSIGNED_BYTE, text_data)
+
+    glDisable(GL_BLEND)
+
+# Handle mouse click events to select a star
+def handle_mouse_click(stars, pos, width, height):
     for star in stars:
-        x, y = star['position']
-        if star['selected']:
-            color = RED
-        else:
-            color = WHITE
+        screen_x = (pos[0] / width) * 1600 - 800
+        screen_y = -((pos[1] / height) * 1200 - 600)
 
-        pygame.draw.circle(screen, color, (int(x), int(y)), 3)  # Draw small circles for stars
-
-        # Display the name if the star is clicked
-        if star['clicked']:
-            name_surface = font.render(star['name'], True, WHITE)
-            screen.blit(name_surface, (x + 10, y - 10))
-
-
-def check_star_click(stars, mouse_pos):
-    for star in stars:
-        x, y = star['position']
-        distance = math.sqrt((x - mouse_pos[0]) ** 2 + (y - mouse_pos[1]) ** 2)
-        if distance <= 5:  # If the mouse is close enough to the star (within 5 pixels)
-            star['clicked'] = True  # Mark the star as clicked
-
-
-# Function to choose a star as the "location"
-def choose_star_location(stars, mouse_pos):
-    for star in stars:
-        x, y = star['position']
-        distance = math.sqrt((x - mouse_pos[0]) ** 2 + (y - mouse_pos[1]) ** 2)
-        if distance <= 5:  # If the mouse is close enough to the star (within 5 pixels)
-            # Deselect all other stars
-            for other_star in stars:
-                other_star['selected'] = False
-            # Select the clicked star
-            star['selected'] = True
-
+        if abs(star.x - screen_x) < star.radius and abs(star.y - screen_y) < star.radius:
+            for s in stars:
+                s.selected = False
+            star.selected = True
+            return star
+    return None
 
 # Main function
 def main():
+    pygame.init()
+    width, height = 800, 600
+    screen = pygame.display.set_mode((width, height), DOUBLEBUF | OPENGL)
+    pygame.display.set_caption("ExoSky")
+
+    glMatrixMode(GL_PROJECTION)
+    glLoadIdentity()
+    gluOrtho2D(-800, 800, -600, 600)
+    glMatrixMode(GL_MODELVIEW)
+    glLoadIdentity()
+
+    
+    zoom = 1.0
+
+    stars = generate_stars(NUM_STARS)
+    selected_star = None
+
     running = True
-    clock = pygame.time.Clock()
-
-    # Set center of the "planet" (middle of the screen)
-    planet_x = screen_width // 2
-    planet_y = screen_height // 2
-
-    # Generate stars with random positions and unique names
-    num_stars = 100
-    stars = generate_stars(num_stars, planet_x, planet_y)
-
-    # Main loop
     while running:
-        # Handle events
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-            elif event.type == pygame.MOUSEBUTTONDOWN:
-                mouse_pos = pygame.mouse.get_pos()
-                if event.button == 1:  # Left-click to view the name of the star
-                    check_star_click(stars, mouse_pos)
-                elif event.button == 3:  # Right-click to choose the star as your location
-                    choose_star_location(stars, mouse_pos)
 
-        # Clear the screen
-        screen.fill(BLACK)
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 4:
+                    zoom *= 1.1
+                if event.button == 5:
+                    zoom /= 1.1
 
-        # Draw stars
-        draw_stars(screen, stars)
+                if event.button == 1:
+                    pos = pygame.mouse.get_pos()
+                    selected_star = handle_mouse_click(stars, pos, width, height)
 
-        # Update the display
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+        glLoadIdentity()
+
+        glScalef(zoom, zoom, 1)
+
+        for star in stars:
+            draw_star_circle(star)
+
+        if selected_star:
+            draw_star_name(selected_star)
+
         pygame.display.flip()
+        pygame.time.wait(10)
 
-        # Frame rate
-        clock.tick(60)
-
-    # Quit Pygame
     pygame.quit()
-
 
 if __name__ == "__main__":
     main()

@@ -1,7 +1,7 @@
 import astropy.units as u
 from astropy.coordinates import SkyCoord
 from astroquery.gaia import Gaia
-import numpy as np
+import numpy as npimport numpy as np
 
 class StarData:
     def __init__(self):
@@ -14,9 +14,19 @@ class StarData:
         self.y = []
         self.z = []
 
+        self.name = []
+        self.year = []
+        self.ra = []
+        self.dec = []
+        self.dist = []
+        self.x = []
+        self.y = []
+        self.z = []
+
         coord = SkyCoord(ra=280, dec=-60, unit=(u.degree, u.degree), frame='icrs')
         width = u.Quantity(0.1, u.degree)
         height = u.Quantity(0.1, u.degree)
+        
         
         r = Gaia.query_object(coordinate=coord, width=width, height=height)
         
