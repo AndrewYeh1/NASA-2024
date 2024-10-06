@@ -2,9 +2,12 @@ import pygame
 
 pygame.init()
 
-screen = pygame.display.set_mode((1280,720))
+screen = pygame.display.set_mode((0,0),pygame.FULLSCREEN)
 
 clock = pygame.time.Clock()
+
+bg = pygame.image.load(open("resources\milkyway_2020_4k_gal_print.jpg"))
+#centre of image has RA = 0 and DEC = 0
 
 def star(xPos, yPos, distance, size):
     displayColour = (255,255,255) #add colour functions
@@ -23,10 +26,12 @@ while True:
     # ...
 
     screen.fill("black")  # Fill the display with a solid color
-    gameDisplay.blit(bg, (0, 0))
+    screen.blit(bg, (0, 0))
     
     # Render the graphics here.
-    star(5,5,5,100)
+    
+    #parameters: x pos, y pos, distance, size
+    star(5,5,1,500)
 
     pygame.display.flip()  # Refresh on-screen display
     clock.tick(30)         # wait until next frame (at 30 FPS)
