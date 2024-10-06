@@ -1,9 +1,6 @@
 import openpyxl
 import numpy as np
 
-print (PlanetData.TripleDtoDoubleD(1,2,3,3,2,1))
-
-
 class PlanetData:
     name = []
     year = []
@@ -72,10 +69,14 @@ class PlanetData:
         #Find the horizontal angle 
         inside1 = np.dot(unitvecY, dVecX) / (dVecXMag*unitvecYMag)
         angleX = np.acos(inside1)
+        if StarX < x:
+            angleX *= -1  
 
         #Find the vertical angle 
         inside2 = np.dot(unitvecY, dVecZ) / (dVecZMag*unitvecYMag)
         angleZ = np.acos(inside2) 
+        if StarZ < z:
+            angleZ *= -1
 
         #Find the coords on the screen based on the angle fraction 
         fracX = angleX / FOVx
