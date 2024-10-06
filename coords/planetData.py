@@ -86,8 +86,11 @@ class PlanetData:
         xCoord = fracX*widthX
         yCoord = fracZ*heightY
 
+        #convert to integer
+        xint = int(xCoord)
+        yint = int(yCoord)
 
-        return xCoord, yCoord 
+        return xint, yint 
 
 
 
