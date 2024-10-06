@@ -23,7 +23,7 @@ class PlanetProjection:
             if ra is not None and dec is not None and dist is not None:
                 x, y, z = planetToCart.equalToCart(ra, dec, dist)
             
-                camX, camY = planetData.TripleDtoDoubleD(0, 0, 0, x, y, z)
+                camX, camY = planetData.TripleDtoDoubleD(0, 0, 0, x, y, z, 1)
 
                 self.viewX.append(camX)
                 self.viewY.append(camY)

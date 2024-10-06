@@ -28,15 +28,15 @@ class PlanetData:
                 elif idx == 4:
                     self.dist.append(col[row].value)
 
-
-def TripleDtoDoubleD(x, y, z, StarX, StarY, StarZ):
+#dirFace: +1 = forward -1 = backwards
+def TripleDtoDoubleD(x, y, z, StarX, StarY, StarZ, dirFace):
     # arrays of star and exoplanet position
     positionStar = np.array([StarX, StarY, StarZ])
     cameraPosition = np.array([x, y, z])
 
     # unitvector point straight ahead from origin (camera position/exoplanet position)
     # and its magnitude
-    unitvecY = np.array([x, y + 1, z])
+    unitvecY = np.array([x, y + dirFace, z])
     unitvecYMag = np.linalg.norm(unitvecY)
 
     # field of views in vertical and horizontal direction
