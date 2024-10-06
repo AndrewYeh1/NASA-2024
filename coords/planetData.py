@@ -1,6 +1,7 @@
 import openpyxl
 import numpy as np
 
+
 class PlanetData:
     name = []
     year = []
@@ -26,80 +27,62 @@ class PlanetData:
                     self.dec.append(col[row].value)
                 elif idx == 4:
                     self.dist.append(col[row].value)
-        print(self.name)
-        print(self.year)
-        print(self.ra)
-        print(self.dec)
-        print(self.dist)
-
-    def TripleDtoDoubleD(x, y, z, StarX, StarY, StarZ): 
-
-        #arrays of star and exoplanet position
-        positionStar = np.array([StarX, StarY, StarZ])
-        cameraPosition = np.array([x, y, z])
-
-        #unitvector point straight ahead from origin (camera position/exoplanet position)
-        #and its magnitude
-        unitvecY = np.array([x,y+1,z])
-        unitvecYMag = np.linalg.norm(unitvecY)
-
-        #field of views in vertical and horizontal direction
-        FOVz = 130/2
-        FOVx = 200/2
-
-        #width and height of screen (set to 1920x1080)
-        widthX = 1920/2
-        heightY = 1080/2
-
-        #vector from exoplanet to star & magnitude of the vector 
-        distanceVec = positionStar - cameraPosition
-        distanceMag = np.linalg.norm(distanceVec)
-
-        dVecX = distanceVec
-        dVecZ = distanceVec 
-        
-        #vectors in x-y plane to find angle with unit vector 
-        dVecX[2] = z
-        dVecZ[0] = x
-
-        #take the magnitudes of the vectors 
-        dVecXMag = np.linalg.norm(dVecX)
-        dVecZMag = np.linalg.norm(dVecZ)
-
-        #Find the horizontal angle 
-        inside1 = np.dot(unitvecY, dVecX) / (dVecXMag*unitvecYMag)
-        angleX = np.acos(inside1)
-        if StarX < x:
-            angleX *= -1  
-
-        #Find the vertical angle 
-        inside2 = np.dot(unitvecY, dVecZ) / (dVecZMag*unitvecYMag)
-        angleZ = np.acos(inside2) 
-        if StarZ < z:
-            angleZ *= -1
-
-        #Find the coords on the screen based on the angle fraction 
-        fracX = angleX / FOVx
-        fracZ = angleZ / FOVz
-        
-        #coords on the plane! 
-        xCoord = fracX*widthX
-        yCoord = fracZ*heightY
-
-        #convert to integer
-        xint = int(xCoord)
-        yint = int(yCoord)
-
-        return xint, yint 
 
 
+def TripleDtoDoubleD(x, y, z, StarX, StarY, StarZ):
+    # arrays of star and exoplanet position
+    positionStar = np.array([StarX, StarY, StarZ])
+    cameraPosition = np.array([x, y, z])
 
+    # unitvector point straight ahead from origin (camera position/exoplanet position)
+    # and its magnitude
+    unitvecY = np.array([x, y + 1, z])
+    unitvecYMag = np.linalg.norm(unitvecY)
 
+    # field of views in vertical and horizontal direction
+    FOVz = 130 / 2 * (np.pi / 180)
+    FOVx = 200 / 2 * (np.pi / 180)
 
+    # width and height of screen (set to 1920x1080)
+    widthX = 1920 / 2
+    heightY = 1080 / 2
 
+    # vector from exoplanet to star & magnitude of the vector
+    distanceVec = np.subtract(positionStar, cameraPosition)
+    distanceMag = np.linalg.norm(distanceVec)
 
+    dVecX = distanceVec.copy()
+    dVecZ = distanceVec.copy()
 
-        
+    # vectors in x-y plane to find angle with unit vector
+    dVecX[2] = z
+    dVecZ[0] = x
 
+    # take the magnitudes of the vectors
+    dVecXMag = np.linalg.norm(dVecX)
+    dVecZMag = np.linalg.norm(dVecZ)
 
+    # Find the horizontal angle
+    inside1 = np.dot(unitvecY, dVecX) / (dVecXMag * unitvecYMag)
+    angleX = np.arccos(inside1)
+    if StarX < x:
+        angleX *= -1
 
+    # Find the vertical angle
+    inside2 = np.dot(unitvecY, dVecZ) / (dVecZMag * unitvecYMag)
+    angleZ = np.arccos(inside2)
+    if StarZ < z:
+        angleZ *= -1
+
+        # Find the coords on the screen based on the angle fraction
+    fracX = angleX / FOVx
+    fracZ = angleZ / FOVz
+
+    # coords on the plane!
+    xCoord = fracX * widthX
+    yCoord = fracZ * heightY
+
+    xint = int(xCoord)
+    yint = int(yCoord)
+
+    return xint, yint

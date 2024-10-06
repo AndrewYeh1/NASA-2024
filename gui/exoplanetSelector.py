@@ -1,18 +1,20 @@
-from gui import planet
+from . import planet
 
-from coords import planetData
+from coords import projectionTo2D
 
 
 class ExoplanetSelector:
     def __init__(self, canvasIn):
         self.canvas = canvasIn
 
-        planetX = [250, 230, 280]
-        planetY = [300, 300, 300]
+        self.planetData = projectionTo2D.PlanetProjection()
+        self.planetData.project()
+        self.planetX = self.planetData.viewX
+        self.planetY = self.planetData.viewY
 
         self.planetList = []
-        for i in range(len(planetX)):
-            self.planetList.append(planet.Planet(planetX[i], planetY[i], 3, self.canvas, "P1"))
+        for i in range(len(self.planetX)):
+            self.planetList.append(planet.Planet(self.planetX[i], self.planetY[i], 3, self.canvas, "P1"))
 
     def show(self):
         for i in self.planetList:

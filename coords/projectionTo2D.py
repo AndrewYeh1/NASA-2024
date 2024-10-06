@@ -1,28 +1,34 @@
-import planetData
-import planetToCart
+from . import planetData
+from . import planetToCart
+
 
 class PlanetProjection:
     def __init__(self):
-        self.planetData = planetData.PlanetData()
+        self.planets = planetData.PlanetData("resources/exoplanets.xlsx")
+        self.viewX = []
+        self.viewY = []
+        self.name = []
     
     def project(self):
-        viewX = []
-        viewY = []
-                
-        for i in range(len(self.planetData.name)):
-            name = planetData.name[i]
-            year = planetData.year[i]
-            ra = planetData.ra[i]
-            dec = planetData.dec[i]
-            dist = planetData.dist[i]
-            
-            x, y, z = planetToCart.equaToCart(ra[i], dec[i], dist[i])
-            
-            camX, camY = planetData.TripleDtoDoubleD(0, 0, 0, x, y, z)
+        self.viewX = []
+        self.viewY = []
 
-            viewX.add(camX)
-            viewY.add(camY)
-            planetZ.add(z)
+        for i in range(len(self.planets.name)):
+            self.name = self.planets.name[i]
+            year = self.planets.year[i]
+            ra = self.planets.ra[i]
+            dec = self.planets.dec[i]
+            dist = self.planets.dist[i]
+
+            if ra is not None and dec is not None and dist is not None:
+                x, y, z = planetToCart.equalToCart(ra, dec, dist)
+            
+                camX, camY = planetData.TripleDtoDoubleD(0, 0, 0, x, y, z)
+
+                self.viewX.append(camX)
+                self.viewY.append(camY)
+            else:
+                print("no coordinate data for planet")
     
 
 
