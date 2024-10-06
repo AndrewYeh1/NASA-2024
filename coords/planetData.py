@@ -40,8 +40,8 @@ def TripleDtoDoubleD(x, y, z, StarX, StarY, StarZ):
     unitvecYMag = np.linalg.norm(unitvecY)
 
     # field of views in vertical and horizontal direction
-    FOVz = 130 / 2 * (np.pi / 180)
-    FOVx = 200 / 2 * (np.pi / 180)
+    FOVz = 180 / 2 * (np.pi / 180)
+    FOVx = 180 / 2 * (np.pi / 180)
 
     # width and height of screen (set to 1920x1080)
     widthX = 1920 / 2
@@ -65,22 +65,31 @@ def TripleDtoDoubleD(x, y, z, StarX, StarY, StarZ):
     # Find the horizontal angle
     inside1 = np.dot(unitvecY, dVecX) / (dVecXMag * unitvecYMag)
     angleX = np.arccos(inside1)
-    if StarX < x:
-        angleX *= -1
 
     # Find the vertical angle
     inside2 = np.dot(unitvecY, dVecZ) / (dVecZMag * unitvecYMag)
     angleZ = np.arccos(inside2)
-    if StarZ < z:
-        angleZ *= -1
 
-        # Find the coords on the screen based on the angle fraction
+    # Find the coords on the screen based on the angle fraction
     fracX = angleX / FOVx
     fracZ = angleZ / FOVz
 
     # coords on the plane!
+    # xCoord = fracX * widthX +widthX/2
+    # yCoord = (fracZ * heightY)
+
+    # coords on the plane!
     xCoord = fracX * widthX
+    if StarX < x:
+        xCoord = widthX - xCoord
+    else:
+        xCoord += widthX
+
     yCoord = fracZ * heightY
+    if StarZ < z:
+        yCoord += heightY
+    else:
+        yCoord = heightY - yCoord
 
     xint = int(xCoord)
     yint = int(yCoord)
