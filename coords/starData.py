@@ -4,9 +4,7 @@ from astroquery.gaia import Gaia
 import numpy as np
 
 class StarData:
-
     def __init__(self):
-
         self.name = []
         self.year = []
         self.ra = []
@@ -15,13 +13,12 @@ class StarData:
         self.x = []
         self.y = []
         self.z = []
-
+        
         #Extract the dataset
         coord = SkyCoord(ra=280, dec=-60, unit=(u.degree, u.degree), frame='icrs')
         width = u.Quantity(0.1, u.degree)
         height = u.Quantity(0.1, u.degree)
         r = Gaia.query_object(coordinate=coord, width=width, height=height)
-        
         # Extract the data from the result
         self.name = r['DESIGNATION'].data
         self.ra = r['ra'].data  # Extract right ascension
@@ -30,7 +27,6 @@ class StarData:
 
         # Calculate distance in parsecs from parallax
         self.dist = 1 / (parallax * u.mas).to(u.arcsec).value  # Convert mas to arcseconds
-        
         # Optionally, calculate the 3D Cartesian coordinates (x, y, z) based on ra, dec, and distance
         self.x = self.dist * u.pc * np.cos(np.radians(self.dec)) * np.cos(np.radians(self.ra))
         self.y = self.dist * u.pc * np.cos(np.radians(self.dec)) * np.sin(np.radians(self.ra))
