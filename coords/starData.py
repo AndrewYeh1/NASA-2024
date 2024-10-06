@@ -41,6 +41,5 @@ class StarData:
         print(f"Y: {self.y}")
         print(f"Z: {self.z}")
 
-# Example usage
 star_data = StarData()
 star_data.print_data()
