@@ -3,6 +3,7 @@ from astropy.coordinates import SkyCoord
 from astroquery.gaia import Gaia
 import numpy as np
 
+
 class StarData:
     def __init__(self):
         self.name = []
@@ -14,7 +15,7 @@ class StarData:
         self.y = []
         self.z = []
         
-        #Extract the dataset
+        # Extract the dataset
         coord = SkyCoord(ra=280, dec=-60, unit=(u.degree, u.degree), frame='icrs')
         width = u.Quantity(0.1, u.degree)
         height = u.Quantity(0.1, u.degree)
@@ -40,6 +41,3 @@ class StarData:
         print(f"X: {self.x}")
         print(f"Y: {self.y}")
         print(f"Z: {self.z}")
-
-star_data = StarData()
-star_data.print_data()
