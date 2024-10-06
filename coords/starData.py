@@ -7,7 +7,6 @@ import numpy as np
 class StarData:
 
     def __init__(self):
-
         self.name = []
         self.ra = []
         self.dec = []
@@ -15,11 +14,14 @@ class StarData:
         self.x = []
         self.y = []
         self.z = []
-        
+
+    def getStarData(self, ra, dec, w, h, rows):
+        Gaia.ROW_LIMIT = rows
+
         # Extract the dataset
-        coord = SkyCoord(ra=280, dec=-60, unit=(u.degree, u.degree), frame='icrs')
-        width = u.Quantity(0.1, u.degree)
-        height = u.Quantity(0.1, u.degree)
+        coord = SkyCoord(ra=ra, dec=dec, unit=(u.degree, u.degree), frame='icrs')
+        width = u.Quantity(w, u.degree)
+        height = u.Quantity(h, u.degree)
         r = Gaia.query_object(coordinate=coord, width=width, height=height)
         
         # Extract the data from the result

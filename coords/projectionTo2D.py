@@ -14,7 +14,7 @@ class PlanetProjection:
         self.viewY = []
 
         for i in range(len(self.planets.name)):
-            self.name = self.planets.name[i]
+            self.name = self.planets.name
             year = self.planets.year[i]
             ra = self.planets.ra[i]
             dec = self.planets.dec[i]
