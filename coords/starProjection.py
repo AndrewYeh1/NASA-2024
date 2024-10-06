@@ -1,4 +1,4 @@
-import starData
+from . import starData
 from . import planetData
 
 class StarData:
@@ -28,5 +28,5 @@ class StarData:
             self.viewX.append(camX)
             self.viewY.append(camY)
 
-        return viewX, viewY
+        return viewX, viewY, name
 
