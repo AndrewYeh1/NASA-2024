@@ -9,12 +9,8 @@ class StarmapViewer:
     def __init__(self, canvasIn):
         self.canvas = canvasIn
 
-        # self.starData = starProjection.StarData()
-        # starX, starY, names = self.starData.getStarPos(0, 0, 1)
-
-        starX = [300, 500, 300, 150, 230]
-        starY = [400, 300, 200, 500, 350]
-        names = ["1", "2", "3", "4", "5"]
+        self.starData = starProjection.StarData()
+        starX, starY, names = self.starData.getStarPos()
 
         self.starList = []
         self.generateStarList(names, starX, starY)
@@ -49,5 +45,7 @@ class StarmapViewer:
 
     def generateStarList(self, names, starX, starY):
         self.starList = []
+        print(starX)
+        print(starY)
         for i, name in enumerate(names):
-            self.starList.append(star.Star(starX[i], starY[i], 5, self.canvas, name))
+            self.starList.append(star.Star(starX[i], starY[i], 5, self.canvas, name[i]))

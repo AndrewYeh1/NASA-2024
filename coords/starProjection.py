@@ -1,5 +1,5 @@
-import starData
-import planetData
+from . import starData
+from . import planetData
 
 class StarData:
     def __init__(self):
@@ -19,13 +19,10 @@ class StarData:
         x = self.starData.x.value
         y = self.starData.y.value
         z = self.starData.z.value
-
-        print(x)
-        print(y)
-        print(z)
         
         viewX = [] 
         viewY = []
+        names = []
 
         for i in range(len(self.starData.name)):
             #from earth (0,0,0) coordinates
@@ -35,8 +32,9 @@ class StarData:
                 camX, camY = planetData.TripleDtoDoubleD(0, 0, 0, x[i], y[i], z[i], 1)
                 viewX.append(camX)
                 viewY.append(camY)
+                names.append(name)
         
-        return viewX, viewY
+        return viewX, viewY, names
  
 #test condtions:
 #starData = StarData()
