@@ -5,9 +5,10 @@ import numpy as np
 
 
 class StarData:
+
     def __init__(self):
+
         self.name = []
-        self.year = []
         self.ra = []
         self.dec = []
         self.dist = []
@@ -20,18 +21,24 @@ class StarData:
         width = u.Quantity(0.1, u.degree)
         height = u.Quantity(0.1, u.degree)
         r = Gaia.query_object(coordinate=coord, width=width, height=height)
+        
         # Extract the data from the result
         self.name = r['DESIGNATION'].data
         self.ra = r['ra'].data  # Extract right ascension
         self.dec = r['dec'].data  # Extract declination
-        parallax = r['parallax'].data  # Extract parallax for distance calculation
+        parallax = r['parallax'].data  # Extract parallax
 
-        # Calculate distance in parsecs from parallax
-        self.dist = 1 / (parallax * u.mas).to(u.arcsec).value  # Convert mas to arcseconds
-        # Optionally, calculate the 3D Cartesian coordinates (x, y, z) based on ra, dec, and distance
-        self.x = self.dist * u.pc * np.cos(np.radians(self.dec)) * np.cos(np.radians(self.ra))
-        self.y = self.dist * u.pc * np.cos(np.radians(self.dec)) * np.sin(np.radians(self.ra))
-        self.z = self.dist * u.pc * np.sin(np.radians(self.dec))
+        # Calculate distance in parsecs from parallax (mas to parsecs)
+        self.dist = (1 / parallax) * u.pc  # Automatically handles units conversion
+
+        # Convert RA, DEC from degrees to radians for trig functions
+        ra_rad = np.radians(self.ra)
+        dec_rad = np.radians(self.dec)
+
+        # Calculate the 3D Cartesian coordinates (x, y, z)
+        self.x = (self.dist * np.cos(dec_rad) * np.cos(ra_rad)).to(u.pc)
+        self.y = (self.dist * np.cos(dec_rad) * np.sin(ra_rad)).to(u.pc)
+        self.z = (self.dist * np.sin(dec_rad)).to(u.pc)
 
     def print_data(self):
         print(f"Name: {self.name}")
