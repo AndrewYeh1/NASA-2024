@@ -20,8 +20,8 @@ class StarData:
 
         # Extract the dataset
         coord = SkyCoord(ra=ra, dec=dec, unit=(u.degree, u.degree), frame='icrs')
-        width = u.Quantity(w, u.degree)
-        height = u.Quantity(h, u.degree)
+        width = u.Quantity(0.5, u.degree)
+        height = u.Quantity(0.5, u.degree)
         r = Gaia.query_object(coordinate=coord, width=width, height=height)
         
         # Extract the data from the result

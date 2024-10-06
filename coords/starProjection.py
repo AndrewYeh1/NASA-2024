@@ -1,11 +1,13 @@
 import starData
-from . import planetData
+import planetData
+
 
 class StarData:
     def __init__(self):
         self.starData = starData.StarData()
 
-    def getStarPos(self, ra, dec, hemisphere):
+    def getStarPos(self):
+        #this function should take in star data position and convert it to a 2d plane to render 
         ra = 0
         dec = 0
         w = 180 #x angle
@@ -15,18 +17,30 @@ class StarData:
 
         #following data types are arrays
         name = self.starData.name
-        x = self.starData.x
-        y = self.starData.y
-        z = self.starData.z
+        x = self.starData.x.value
+        y = self.starData.y.value
+        z = self.starData.z.value
 
-        viewX = []
-        viewY = []
+        print(x)
+        print(y)
+        print(z)
         
+        viewX = [] 
+        viewY = []
+
         for i in range(len(self.starData.name)):
             #from earth (0,0,0) coordinates
-            camX, camY = planetData.TripleDtoDoubleD(0, 0, 0, x[i], y[i], z[i])
-            self.viewX.append(camX)
-            self.viewY.append(camY)
 
+            #camX is the x position of the star on the screen once projected, and camY is the y position of the screen
+            if y[i] > 0:
+                camX, camY = planetData.TripleDtoDoubleD(0, 0, 0, x[i], y[i], z[i], 1)
+                viewX.append(camX)
+                viewY.append(camY)
+        
         return viewX, viewY
-
+ 
+#test condtions:
+#starData = StarData()
+#x, y = starData.getStarPos()
+#print(x)
+#print(y)
