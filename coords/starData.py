@@ -20,10 +20,21 @@ class StarData:
 
         # Extract the dataset
         coord = SkyCoord(ra=ra, dec=dec, unit=(u.degree, u.degree), frame='icrs')
-        width = u.Quantity(0.5, u.degree)
-        height = u.Quantity(0.5, u.degree)
-        r = Gaia.query_object(coordinate=coord, width=width, height=height)
-        
+
+        maxDistance = 1000  # parsecs
+
+        maxParallax = 1000 / maxDistance
+
+        query = f"""
+            SELECT TOP 1000 * 
+            FROM gaiadr3.gaia_source
+            WHERE DISTANCE(0, 0, ra, dec) < 180
+            AND phot_g_mean_mag < 7
+        """
+
+        job = Gaia.launch_job_async(query)
+        r = job.get_results()
+
         # Extract the data from the result
         self.name = r['DESIGNATION'].data
         self.ra = r['ra'].data  # Extract right ascension
